@@ -17,8 +17,7 @@ namespace Product.Infrastructure
         public static IServiceCollection InfrastructureConfigration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            //services.AddScoped<ICategoryRepository, CategoryRepository>();
-            //services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefualtConnection"));

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Product.Core.Entities;
 using Product.Core.Interface;
 using Product.Infrastructure.Data;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Product.Infrastructure.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : BasicEntity<int>
     {
         private readonly ApplicationDbContext _context;
 
@@ -37,7 +38,7 @@ namespace Product.Infrastructure.Repository
             return _context.Set<T>().AsNoTracking().ToList();
         }
 
-        public IEnumerable<T> GetAll(params Expression<Func<T, bool>>[] includes)
+        public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includes)
         {
             return _context.Set<T>().AsNoTracking().ToList();
         }
@@ -47,7 +48,7 @@ namespace Product.Infrastructure.Repository
             return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, bool>>[] includes)
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
             var query = _context.Set<T>().AsQueryable();
             foreach (var item in includes)
@@ -64,12 +65,13 @@ namespace Product.Infrastructure.Repository
 
         public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _context.Set<T>().AsQueryable();
+            //IQueryable<T> query = _context.Set<T>().AsQueryable();
+            IQueryable<T> query = _context.Set<T>().Where(x => x.Id == id);
             foreach (var item in includes)
             {
                 query = query.Include(item);
             }
-            return await ((DbSet<T>)query).FindAsync(id);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(int id, T entity)

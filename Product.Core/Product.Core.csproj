@@ -9,5 +9,12 @@
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+  <!--<ItemGroup>
+    <ProjectReference Include="..\Product.Infrastructure\Product.Infrastructure.csproj" />
+  </ItemGroup>-->
+
 
 </Project>
