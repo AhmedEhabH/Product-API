@@ -10,6 +10,8 @@ namespace Product.Core.Interface
 {
     public interface IProductRepository : IGenericRepository<Products>
     {
-        Task<bool> AddAsync(CreateProductDto productDto);
+        Task<bool> AddAsync(CreateProductDto dto);
+        Task<bool> UpdateAsync(int id, UpdateProductDro dto);
+        Task<bool> DeleteAsync(int id);
     }
 }

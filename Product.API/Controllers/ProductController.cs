@@ -39,21 +39,58 @@ namespace Product.API.Controllers
         }
 
         [HttpPost("add-new-product")]
-        public async Task<ActionResult> Post(CreateProductDto product)
+        public async Task<ActionResult> Post([FromForm] CreateProductDto product)
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    var result = _mapper.Map<Products>(product);
-                    await _uow.ProductRepository.AddAsync(result);
-                    return Ok(result);
+                    var result = await _uow.ProductRepository.AddAsync(product);
+                    return result ? Ok(product) : BadRequest(result);
                 }
                 return BadRequest(product);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("update-existing-product/{id}")]
+        public async Task<ActionResult> Put(int id, [FromForm] UpdateProductDro dto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _uow.ProductRepository.UpdateAsync(id, dto);
+                    return result ? Ok(dto) : BadRequest(result);
+                }
+                return BadRequest($"Model State Not Valid, {dto}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}", ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("delete-existing-product/{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _uow.ProductRepository.DeleteAsync(id);
+                    return result ? Ok(result) : BadRequest(result);
+                }
+                return NotFound($"This id={id} not found");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message , ex);
                 return BadRequest(ex.Message);
             }
         }
