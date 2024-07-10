@@ -5,6 +5,7 @@ using Product.Infrastructure.Data;
 using Product.Core.Interface;
 using Product.Core.Entities;
 using Product.Core.Dto;
+using Product.API.Errors;
 
 namespace Product.API.Controllers
 {
@@ -31,9 +32,12 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("get-product-by-id/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseCommonResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult> GetById(int id)
         {
             var product = await _uow.ProductRepository.GetByIdAsync(id, x => x.Category);
+            if (product is null) return NotFound(new BaseCommonResponse(404));
             var result = _mapper.Map<ProductDto>(product);
             return Ok(result);
         }
@@ -88,9 +92,9 @@ namespace Product.API.Controllers
                 }
                 return NotFound($"This id={id} not found");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message , ex);
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
