@@ -23,11 +23,11 @@ namespace Product.API.Middleware
             {
                 await _next(context);
                 _logger.LogInformation("Success");
+                _logger.LogInformation("Pass Middleware");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"This Error come From exception Middleware {ex.Message} !");
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, $"This Error come From exception Middleware \n {ex.Message} !");
 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";

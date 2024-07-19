@@ -6,6 +6,8 @@ using Product.Core.Interface;
 using Product.Core.Entities;
 using Product.Core.Dto;
 using Product.API.Errors;
+using Product.Core.Sharing;
+using Product.API.Helper;
 
 namespace Product.API.Controllers
 {
@@ -24,11 +26,12 @@ namespace Product.API.Controllers
             _logger = logger;
         }
         [HttpGet("get-all-products")]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get([FromQuery] ProductParams productParams)
         {
-            var products = await _uow.ProductRepository.GetAllAsync(x => x.Category);
+            var products = await _uow.ProductRepository.GetAllAsync(productParams);
+            var totalItems = await _uow.ProductRepository.CountAsync();
             var result = _mapper.Map<List<ProductDto>>(products);
-            return Ok(result);
+            return Ok(new Pagination<ProductDto>(productParams.PageSize, productParams.PageNumber, totalItems, result));
         }
 
         [HttpGet("get-product-by-id/{id}")]

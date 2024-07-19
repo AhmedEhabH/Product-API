@@ -5,12 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
   </ItemGroup>
   <!--<ItemGroup>
     <ProjectReference Include="..\Product.Infrastructure\Product.Infrastructure.csproj" />

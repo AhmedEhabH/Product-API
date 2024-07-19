@@ -22,6 +22,13 @@ namespace Product.API.Extensioins
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", pol =>
+                {
+                    pol.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:7221");
+                });
+            });
             return services;
         }
     }

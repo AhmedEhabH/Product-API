@@ -10,5 +10,6 @@ namespace Product.Core.Interface
     {
         public ICategoryRepository CategoryRepository { get; }
         public IProductRepository ProductRepository { get; }
+        public IBasketRepository BasketRepository { get; }
     }
 }
