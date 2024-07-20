@@ -32,13 +32,13 @@ namespace Product.Infrastructure.Repository
             _logger.LogInformation($"Basket:\n{basket}");
             _logger.LogInformation($"Basket.BasketItems:\n{basket.BasketItems}");
 
-            var items = new List<OrderItems>();
+            var items = new List<OrderItem>();
 
             foreach (var item in basket.BasketItems)
             {
                 var productItem = await _uow.ProductRepository.GetByIdAsync(item.Id);
                 var productItemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name, productItem?.ProductPicture);
-                var orderItem = new OrderItems(productItemOrdered, item.Price, item.Quantity);
+                var orderItem = new OrderItem(productItemOrdered, item.Price, item.Quantity);
                 items.Add(orderItem);
             }
             _logger.LogInformation($"items.Count:\n{items.Count}");
@@ -50,6 +50,7 @@ namespace Product.Infrastructure.Repository
             _logger.LogInformation($"First _context.SaveChangesAsync()");
 
             var deliveryMethod = await _context.DeliveryMethods.Where(x => x.ID == deliveryMethodId).FirstOrDefaultAsync();
+            _logger.LogInformation($"DeliveryMethod:\nID:{deliveryMethodId}\nObject:{deliveryMethod}");
 
             var subtotal = items.Sum(x => x.Price * x.Quantity);
 
@@ -61,17 +62,6 @@ namespace Product.Infrastructure.Repository
             {
                 return null;
             }
-
-            _logger.LogInformation($"Order.OrderId:{order.Id}");
-            _logger.LogInformation($"Order.BuyerEmail:{order.BuyerEmail}");
-            _logger.LogInformation($"Order.OrderDate:{order.OrderDate}");
-            _logger.LogInformation($"Order.ShipToAddress:{order.ShipToAddress}");
-            _logger.LogInformation($"Order.DeliveryMethod:{order.DeliveryMethod}");
-            _logger.LogInformation($"Order.OrderItems:{order.OrderItems}");
-            _logger.LogInformation($"Order.SubTotal:{order.SubTotal}");
-            _logger.LogInformation($"Order.OrderStatus:{order.OrderStatus}");
-            _logger.LogInformation($"Order.PaymentIntentId:{order.PaymentIntentId}");
-            _logger.LogInformation($"Order.GetTotal:{order.GetTotal()}");
 
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
@@ -85,19 +75,32 @@ namespace Product.Infrastructure.Repository
             return order;
         }
 
-        public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
         {
-            throw new NotImplementedException();
+            return await _context.DeliveryMethods.ToListAsync();
         }
 
-        public Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
+        public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
-            throw new NotImplementedException();
+            var order = await _context.Orders
+                .Where(x => x.Id == id && x.BuyerEmail == buyerEmail)
+                .Include(x => x.OrderItems).ThenInclude(x => x.ProductItemOrder)
+                .Include(x => x.DeliveryMethod)
+                .FirstOrDefaultAsync();
+
+            return order;
         }
 
-        public Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
+        public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var order = await _context.Orders
+               .Where(x => x.BuyerEmail == buyerEmail)
+               .Include(x => x.DeliveryMethod)
+               .Include(x => x.OrderItems).ThenInclude(x => x.ProductItemOrder)
+               .OrderByDescending(x => x.OrderDate)
+               .ToListAsync();
+
+            return order;
         }
     }
 }

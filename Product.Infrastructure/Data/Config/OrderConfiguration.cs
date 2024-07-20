@@ -13,6 +13,11 @@ namespace Product.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
+            /*builder.HasOne(o => o.DeliveryMethod)
+                .WithMany(d => d.Orders)
+                .HasForeignKey(o => o.DeliveryMethodId)
+                .IsRequired();*/
+
             builder.OwnsOne(x => x.ShipToAddress, n =>
             {
                 n.WithOwner();

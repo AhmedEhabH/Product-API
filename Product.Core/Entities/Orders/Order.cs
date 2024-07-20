@@ -14,18 +14,9 @@ namespace Product.Core.Entities.Orders
 
         }
 
-        /*public Order(string buyerEmail, ShipAddress shipToAddress, DeliveryMethod deliveryMethod, List<OrderItems> orderItems, decimal subTotal)
-        {
-            BuyerEmail = buyerEmail;
-            ShipToAddress = shipToAddress;
-            DeliveryMethod = deliveryMethod;
-            OrderItems = orderItems;
-            SubTotal = subTotal;
-        }*/
-
         public Order(
             string buyerEmail, ShipAddress shipToAddress, DeliveryMethod deliveryMethod,
-            IReadOnlyList<OrderItems> orderItems, decimal subTotal, string paymentIntentId = null
+            IReadOnlyList<OrderItem> orderItems, decimal subTotal, string paymentIntentId = null
             )
         {
             BuyerEmail = buyerEmail;
@@ -40,8 +31,9 @@ namespace Product.Core.Entities.Orders
         public string BuyerEmail { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public ShipAddress ShipToAddress { get; set; }
-        public DeliveryMethod DeliveryMethod { get; set; }
-        public IReadOnlyList<OrderItems> OrderItems { get; set; }
+        //public int DeliveryMethodId { get; set; } // Foreign key
+        public DeliveryMethod DeliveryMethod { get; set; } // Navigation property
+        public IReadOnlyList<OrderItem> OrderItems { get; set; }
         public decimal SubTotal { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
         public string? PaymentIntentId { get; set; } = null;

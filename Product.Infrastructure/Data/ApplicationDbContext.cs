@@ -21,7 +21,7 @@ namespace Product.Infrastructure.Data
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Address> Address { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OrderItems> OrderItems { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

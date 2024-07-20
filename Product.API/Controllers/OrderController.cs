@@ -48,5 +48,43 @@ namespace Product.API.Controllers
 
             return Ok(order);
         }
+
+        [HttpGet("get-order-for-user")]
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrderForUser()
+        {
+            _logger.LogInformation("get-order-for-user");
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            _logger.LogInformation($"email:{email}");
+            var order = await _orderServices.GetOrdersForUserAsync(email);
+            _logger.LogInformation($"order:{order}");
+            _logger.LogInformation($"Retrieved orders:{order.Count} orders for user {email}");
+
+            var result = _mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(order);
+            _logger.LogInformation($"result:{result}");
+
+            return Ok(result);
+        }
+
+        [HttpGet("get-order-by-id/{id}")]
+        public async Task<ActionResult<OrderToReturnDto>> GetOrderById(int id)
+        {
+            var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            var order = await _orderServices.GetOrderByIdAsync(id, email);
+
+            if (order is null)
+            {
+                return NotFound(new BaseCommonResponse(404));
+            }
+
+            var result = _mapper.Map<Order, OrderToReturnDto>(order);
+            return Ok(result);
+        }
+
+        [HttpGet("get-delivery-method")]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethod()
+        {
+            _logger.LogInformation("get-delivery-method");
+            return Ok(await _orderServices.GetDeliveryMethodsAsync());
+        }
     }
 }

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Product.Infrastructure.Data.Migrations.ReMigrations
+namespace Product.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ReMigration : Migration
+    public partial class ReCreateDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -271,7 +271,7 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                 name: "OrderItems",
                 columns: table => new
                 {
-                    OrderItemsID = table.Column<int>(type: "int", nullable: false)
+                    OrderItemID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductItemOrder_ProductItemId = table.Column<int>(type: "int", nullable: false),
                     ProductItemOrder_ProductItemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -282,7 +282,7 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemsID);
+                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemID);
                     table.ForeignKey(
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,

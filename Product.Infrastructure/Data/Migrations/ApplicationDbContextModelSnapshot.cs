@@ -8,7 +8,7 @@ using Product.Infrastructure.Data;
 
 #nullable disable
 
-namespace Product.Infrastructure.Data.Migrations.ReMigrations
+namespace Product.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -407,13 +407,13 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Product.Core.Entities.Orders.OrderItems", b =>
+            modelBuilder.Entity("Product.Core.Entities.Orders.OrderItem", b =>
                 {
-                    b.Property<int>("OrderItemsID")
+                    b.Property<int>("OrderItemID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemsID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemID"));
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
@@ -424,7 +424,7 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("OrderItemsID");
+                    b.HasKey("OrderItemID");
 
                     b.HasIndex("OrderId");
 
@@ -616,7 +616,7 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Product.Core.Entities.Orders.OrderItems", b =>
+            modelBuilder.Entity("Product.Core.Entities.Orders.OrderItem", b =>
                 {
                     b.HasOne("Product.Core.Entities.Orders.Order", null)
                         .WithMany("OrderItems")
@@ -625,7 +625,7 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
 
                     b.OwnsOne("Product.Core.Entities.Orders.ProductItemOrdered", "ProductItemOrder", b1 =>
                         {
-                            b1.Property<int>("OrderItemsID")
+                            b1.Property<int>("OrderItemID")
                                 .HasColumnType("int");
 
                             b1.Property<string>("PictureUrl")
@@ -639,12 +639,12 @@ namespace Product.Infrastructure.Data.Migrations.ReMigrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("OrderItemsID");
+                            b1.HasKey("OrderItemID");
 
                             b1.ToTable("OrderItems");
 
                             b1.WithOwner()
-                                .HasForeignKey("OrderItemsID");
+                                .HasForeignKey("OrderItemID");
                         });
 
                     b.Navigation("ProductItemOrder")
