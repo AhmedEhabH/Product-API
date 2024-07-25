@@ -1,5 +1,7 @@
+## API Endpoints
 ![API Endpoints](./Readme.Picture/Screenshot-2024-07-25-182750.png)
 ![API Endpoints](./Readme.Picture/Screenshot-2024-07-25-182758.png)
+## Test API Endpoints
 ![Get All Categories](./Readme.Picture/Screenshot-2024-07-25-182905.png)
 ![Get Category By Id](./Readme.Picture/Screenshot-2024-07-25-182914.png)
 ![Test API Endpoints](./Readme.Picture/Screenshot-2024-07-25-182943.png)
